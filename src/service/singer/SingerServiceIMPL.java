@@ -25,7 +25,12 @@ public class SingerServiceIMPL implements ISingerService {
 
     @Override
     public void save(Singer e) {
-        singerList.add(e);
+        int id = e.getId();
+        if (id == singerList.size() + 1) {
+            singerList.add(e);
+        } else {
+            singerList.set(id - 1, e);
+        }
     }
 
     @Override
@@ -44,7 +49,7 @@ public class SingerServiceIMPL implements ISingerService {
         updateId();
     }
 
-    public void updateId() {
+    private void updateId() {
         for (int i = 0; i < singerList.size(); i++) {
             singerList.get(i).setId(i + 1);
         }

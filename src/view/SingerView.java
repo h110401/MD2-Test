@@ -10,6 +10,45 @@ public class SingerView {
     Scanner sc = new Scanner(System.in);
     private final SingerController singerController = new SingerController();
 
+    public SingerView() {
+        System.out.println("MENU");
+        System.out.println("1. Show List Singer");
+        System.out.println("2. Create Singer");
+        System.out.println("3. Update Singer");
+        System.out.println("4. Detail Singer");
+        System.out.println("5. Delete Singer");
+        System.out.println("6. Sort Singer List");
+        System.out.println("7. Exit");
+        int choice = Integer.parseInt(sc.nextLine());
+        switch (choice) {
+            case 1:
+                this.showListSinger();
+                break;
+            case 2:
+                this.createSinger();
+                break;
+            case 3:
+                this.updateSinger();
+                break;
+            case 4:
+                this.showDetailSinger();
+                break;
+            case 5:
+                this.deleteSinger();
+                break;
+            case 6:
+                this.sortSingerList();
+                break;
+            case 7:
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid choice");
+        }
+        new SingerView();
+    }
+
+
     public void showListSinger() {
         for (Singer singer : singerController.getSingers()) {
             System.out.println(singer.getId() + ". " + singer.getName() + " " + singer.getAge());
@@ -21,7 +60,7 @@ public class SingerView {
         String name = sc.nextLine();
         System.out.println("Enter singer age:");
         int age = Integer.parseInt(sc.nextLine());
-        singerController.addSinger(new Singer(singerController.getSingers().size() + 1, name, age));
+        singerController.saveSinger(new Singer(singerController.getSingers().size() + 1, name, age));
     }
 
     public void deleteSinger() {
@@ -57,22 +96,21 @@ public class SingerView {
             System.out.println("Id out of range");
             return;
         }
-        Singer singer = singerController.findSingerById(id);
         System.out.println("Enter new singer name:");
         String name = sc.nextLine();
         System.out.println("Enter new singer age:");
         int age = Integer.parseInt(sc.nextLine());
-        singer.setName(name);
-        singer.setAge(age);
+        singerController.saveSinger(new Singer(id, name, age));
     }
 
     public void sortSingerList() {
         singerController.sortSingerList();
         System.out.println("Singer list sorted");
+        showListSinger();
     }
 
     private boolean isValid(int id) {
         int size = singerController.getSingers().size();
-        return id >= 0 && id < size;
+        return id >= 1 && id <= size;
     }
 }

@@ -14,7 +14,7 @@ public class SingerController {
         return singerService.findAll();
     }
 
-    public void addSinger(Singer singer) {
+    public void saveSinger(Singer singer) {
         singerService.save(singer);
     }
 
