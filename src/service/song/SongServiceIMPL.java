@@ -15,7 +15,7 @@ public class SongServiceIMPL implements ISongService {
         songs.add(new Song(3, "Three"));
         songs.add(new Song(4, "Four"));
         for (Song song : songs) {
-            song.setListen((int) (Math.random() * 100 + 1));
+            song.setListen((int) (Math.random() * 1000 + 1));
             song.setLike((int) (Math.random() * song.getListen() + 1));
         }
     }
