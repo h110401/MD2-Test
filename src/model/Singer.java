@@ -1,16 +1,28 @@
 package model;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Singer implements Comparable<Singer> {
     private int id;
     private String name;
     private int age;
 
+    private List<Song> songList;
+
     public Singer(int id, String name, int age) {
         this.id = id;
         this.name = name;
         this.age = age;
+        this.songList = new ArrayList<>();
+    }
+
+    public List<Song> getSongList() {
+        return songList;
+    }
+
+    public void setSongList(List<Song> songList) {
+        this.songList = songList;
     }
 
     public int getId() {

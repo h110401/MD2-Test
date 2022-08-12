@@ -2,16 +2,18 @@ package view;
 
 import controller.SingerController;
 import model.Singer;
+import model.Song;
 
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class SingerView {
 
-    Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
     private final SingerController singerController = new SingerController();
 
-    public SingerView() {
-        System.out.println("MENU");
+    public void menu() {
+        System.out.println("SINGER MENU");
         System.out.println("1. Show List Singer");
         System.out.println("2. Create Singer");
         System.out.println("3. Update Singer");
@@ -40,14 +42,13 @@ public class SingerView {
                 this.sortSingerList();
                 break;
             case 7:
-                System.exit(0);
+                new Main();
                 break;
             default:
                 System.out.println("Invalid choice");
         }
-        new SingerView();
+        new SingerView().menu();
     }
-
 
     public void showListSinger() {
         for (Singer singer : singerController.getSingers()) {
@@ -60,14 +61,17 @@ public class SingerView {
         String name = sc.nextLine();
         System.out.println("Enter singer age:");
         int age = Integer.parseInt(sc.nextLine());
-        singerController.saveSinger(new Singer(singerController.getSingers().size() + 1, name, age));
+        int lastId = singerController.getSingers().stream().max(Comparator.comparing(Singer::getId)).get().getId();
+        System.out.println(lastId);
+        singerController.saveSinger(new Singer(lastId + 1, name, age));
     }
 
     public void deleteSinger() {
+        showListSinger();
         System.out.println("Enter singer id to delete: ");
         int id = Integer.parseInt(sc.nextLine());
-        if (!isValid(id)) {
-            System.out.println("Id out of range");
+        if (singerController.findSingerById(id) == null) {
+            System.out.println("Id not found");
             return;
         }
         System.out.println("Are you sure want to delete (Y / N)?");
@@ -82,18 +86,24 @@ public class SingerView {
     }
 
     public void showDetailSinger() {
+        showListSinger();
         System.out.println("Enter singer id to show:");
         int id = Integer.parseInt(sc.nextLine());
         Singer singer = singerController.findSingerById(id);
         System.out.println("Id: " + singer.getId() + ", name: " + singer.getName() + ", age: " + singer.getAge());
+        System.out.println("Song performed: ");
+        for (Song song : singer.getSongList()) {
+            System.out.println("\t" + song.getName());
+        }
     }
 
     public void updateSinger() {
+        showListSinger();
         System.out.println("EDIT SINGER");
         System.out.println("Enter singer id :");
         int id = Integer.parseInt(sc.nextLine());
-        if (!isValid(id)) {
-            System.out.println("Id out of range");
+        if (singerController.findSingerById(id) == null) {
+            System.out.println("Id not found");
             return;
         }
         System.out.println("Enter new singer name:");
@@ -109,8 +119,4 @@ public class SingerView {
         showListSinger();
     }
 
-    private boolean isValid(int id) {
-        int size = singerController.getSingers().size();
-        return id >= 1 && id <= size;
-    }
 }

@@ -12,4 +12,5 @@ public interface IGeneric<T> {
     T findById(int id);
 
     void sort();
+
 }

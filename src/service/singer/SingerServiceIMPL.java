@@ -1,6 +1,9 @@
 package service.singer;
 
 import model.Singer;
+import model.Song;
+import service.song.ISongService;
+import service.song.SongServiceIMPL;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,50 +11,53 @@ import java.util.List;
 
 public class SingerServiceIMPL implements ISingerService {
 
-    private static final List<Singer> singerList = new ArrayList<>();
+    private static final List<Singer> singers = new ArrayList<>();
 
     static {
-        singerList.add(new Singer(1, "John", 30));
-        singerList.add(new Singer(2, "Joe", 28));
-        singerList.add(new Singer(3, "Jay", 25));
-        singerList.add(new Singer(4, "Joe", 20));
+        singers.add(new Singer(1, "John", 30));
+        singers.add(new Singer(2, "Joe", 28));
+        singers.add(new Singer(3, "Jay", 25));
+        singers.add(new Singer(4, "Joe", 20));
+        ISongService service = new SongServiceIMPL();
+        service.findAll().get(0).getSingerList().add(singers.get(0));
+        singers.get(0).getSongList().add(service.findAll().get(0));
+        service.findAll().get(1).getSingerList().add(singers.get(1));
+        singers.get(1).getSongList().add(service.findAll().get(1));
+        service.findAll().get(2).getSingerList().add(singers.get(2));
+        singers.get(2).getSongList().add(service.findAll().get(2));
+        service.findAll().get(3).getSingerList().add(singers.get(3));
+        singers.get(3).getSongList().add(service.findAll().get(3));
+
     }
 
 
     @Override
     public List<Singer> findAll() {
-        return singerList;
+        return singers;
     }
 
     @Override
-    public void save(Singer e) {
-        int id = e.getId();
-        if (id == singerList.size() + 1) {
-            singerList.add(e);
+    public void save(Singer singer) {
+        if (this.findById(singer.getId()) == null) {
+            singers.add(singer);
         } else {
-            singerList.set(id - 1, e);
+            this.findById(singer.getId()).setName(singer.getName());
+            this.findById(singer.getId()).setAge(singer.getAge());
         }
     }
 
     @Override
     public void deleteById(int id) {
-        singerList.remove(id - 1);
-        updateId();
+        singers.remove(this.findById(id));
     }
 
     @Override
     public Singer findById(int id) {
-        return singerList.get(id - 1);
+        return singers.stream().filter(s -> s.getId() == id).findAny().orElse(null);
     }
 
     public void sort() {
-        Collections.sort(singerList);
-        updateId();
+        Collections.sort(singers);
     }
 
-    private void updateId() {
-        for (int i = 0; i < singerList.size(); i++) {
-            singerList.get(i).setId(i + 1);
-        }
-    }
 }
